@@ -1,6 +1,5 @@
 package daar.KMP;
 
-import daar.Util.Point;
 import daar.Util.Util;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -17,11 +16,12 @@ public class KMP {
 	}
         
         public static List<Integer> getAllIndexOfWordInLine(String word, String line){
+        	line+=" ";
             List<Integer> listOfIndex = new ArrayList<>();
             int index = getIndexOfWord(word, line);
             while(index!=-1){
                 if(listOfIndex.size()>0){
-                    int lastIndex = index+listOfIndex.get(listOfIndex.size()-1);
+                    int lastIndex = index + listOfIndex.get(listOfIndex.size()-1);
                     listOfIndex.add(lastIndex);
                     index = getIndexOfWord(word, line.substring(lastIndex+word.length()));
                 }

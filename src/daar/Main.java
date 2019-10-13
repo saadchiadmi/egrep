@@ -18,29 +18,30 @@ import java.io.IOException;
  */
 public class Main {
 
-    /**
-     * @param args the command line arguments
-     * @throws java.io.FileNotFoundException
-     */
-    public static void main(String[] args) throws FileNotFoundException, IOException {
-        String motif= "works";
-        String file = "49345-0.txt";
-        
-        if(Util.isRegex(motif)){
-            System.out.println("TME 1");
-            
-        }else if(!Util.isWord(motif)){
-            KMP.displayAllLinesContainsWordInFile(motif, file);
-        
-        }else{
-            if(!new File(Util.getFileName(file)+".index").isFile()){
-                Indexing.forwardIndexing(file);
-            }
-            Util.displayAllLinesContaintWordInIndexFile(file, motif);
-        }
+	/**
+	 * @param args the command line arguments
+	 * @throws java.io.FileNotFoundException
+	 */
+	public static void main(String[] args) throws FileNotFoundException, IOException {
+		long start = System.currentTimeMillis();
+		String motif = "word";
+		String file = "files/oneHundredMegaOctet.txt";
 
-    }
-    
-    
-    
+		if (Util.isRegex(motif)) {
+			System.out.println("TME 1");
+
+		} else if (!Util.isWord(motif)) {
+			KMP.displayAllLinesContainsWordInFile(motif, file);
+
+		} else {
+			if (!new File(Util.getFileName(file) + ".index").isFile()) {
+				Indexing.forwardIndexing(file);
+			}
+			Util.displayAllLinesContaintWordInIndexFile(file, motif);
+		}
+		long elapsedTimeMillis = System.currentTimeMillis() - start;
+		System.out.println(elapsedTimeMillis);
+
+	}
+
 }

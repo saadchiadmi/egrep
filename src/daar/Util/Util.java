@@ -122,4 +122,8 @@ public class Util {
         }
     }
     
+    public static List<Point> listIntToListPoint(List<Integer> list, int line) {
+    	return list.stream().map(i -> new Point(i, line)).collect(Collectors.toList());
+    }
+    
 }
