@@ -1,6 +1,14 @@
 package daar.WarMachine;
 
 import java.util.Scanner;
+
+import daar.Index.Indexing;
+import daar.KMP.KMP;
+import daar.Util.Util;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class RegEx {
@@ -17,19 +25,25 @@ public class RegEx {
   //REGEX
   private static String regEx;
   
+  //FILE
+  private static String file;
+  
   //CONSTRUCTOR
   public RegEx(){}
 
   //MAIN
-  public static void main(String arg[]) {
+  public static void main(String arg[]) throws FileNotFoundException, IOException {
     System.out.println("Welcome to Bogota, Mr. Thomas Anderson.");
-    if (arg.length==0) {
-      //regEx = arg[0];
-      regEx = "to";
+    if (arg.length ==2) {
+      regEx = arg[0];
+      file = arg[1];
+      
     } else {
       Scanner scanner = new Scanner(System.in);
       System.out.print("  >> Please enter a regEx: ");
       regEx = scanner.next();
+      System.out.print("  >> Please enter a filename: ");
+      file = scanner.next();
     }
     System.out.println("  >> Parsing regEx \""+regEx+"\".");
     System.out.println("  >> ...");
@@ -40,15 +54,33 @@ public class RegEx {
       System.out.print("  >> ASCII codes: ["+(int)regEx.charAt(0));
       for (int i=1;i<regEx.length();i++) System.out.print(","+(int)regEx.charAt(i));
       System.out.println("].");
-      try {
-        RegExTree ret = parse();
-        System.out.println("  >> Tree result: "+ret.toString()+".");
-        Automate aut = toAutomate(ret);
-        System.out.println(aut);
-      } catch (Exception e) {
-    	  e.printStackTrace();
-        System.err.println("  >> ERROR: syntax error for regEx \""+regEx+"\".");
+      
+      if(Util.isRegex(regEx)) {
+    	  
+    	  try {
+  	        RegExTree ret = parse();
+  	        System.out.println("  >> Tree result: "+ret.toString()+".");
+  	        Automate aut = Automate.minAuto(Automate.deterAuto(toAutomate(ret)));
+  	        aut.searchInFile(file);
+  	      } catch (Exception e) {
+  	    	  e.printStackTrace();
+  	        System.err.println("  >> ERROR: syntax error for regEx \""+regEx+"\".");
+  	      } 
+    	  
+      }else if(!Util.isWord(regEx)){
+          KMP.displayAllLinesContainsWordInFile(regEx, file);
+          
+      }else{
+          if(!new File(Util.getFileName(file)+".index").isFile()){
+              Indexing.forwardIndexing(file);
+          }
+          Util.displayAllLinesContaintWordInIndexFile(file, regEx);
       }
+      
+       
+      
+      
+      
     }
 
     System.out.println("  >> ...");
@@ -238,6 +270,9 @@ public class RegEx {
 		
 	case RegEx.ALTERN:
 		return Automate.alterAuto(toAutomate(ret.subTrees.get(0)), toAutomate(ret.subTrees.get(1)));
+		
+	case RegEx.DOT:
+		return Automate.dotAuto();
 
 	default:
 		if(ret.subTrees.isEmpty()) return Automate.basicAuto(ret.root);
