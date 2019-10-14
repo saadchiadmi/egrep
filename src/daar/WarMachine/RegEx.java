@@ -33,6 +33,7 @@ public class RegEx {
 	  	this.regEx = regEx;
 	  	this.file = file;
 	  	System.out.println("  >> Parsing regEx \""+regEx+"\".");
+		System.out.println("  >> File to search in \""+file+"\".");
 		System.out.println("  >> ...");
 		System.out.print("  >> ASCII codes: ["+(int)regEx.charAt(0));
 		for (int i=1;i<regEx.length();i++) System.out.print(","+(int)regEx.charAt(i));
